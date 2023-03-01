@@ -4,6 +4,8 @@ import Link from 'next/link';
 import ReactStars from "react-rating-stars-component";
 import Cookies from 'universal-cookie';
 import axios from "axios";
+import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 
 
 const cookies = new Cookies();
@@ -15,16 +17,20 @@ const Blog: React.FC<singleBlog> = ({ data , comments }) => {
 
   const [comment, setComment] = useState("");
 
-  const token = cookies.get('token')
+  const token = cookies.get('token');
+
+  const router = useRouter();
 
   const submit_Rate = async (newRate:any) => {
     
     if (!token) {
-      window.location.assign(`http://localhost:3000/login_signup`)
-      return alert("You have to login or sign up before submiting a rate!")
+      // window.location.assign(`http://localhost:3000/login_signup`)
+      // return alert("You have to login or sign up before submiting a rate!")
+      toast.error("You have to login or sign up before submiting a rate!")
+      return router.push('/login_signup')
     } 
 
-    alert("Your rate submited successfully!");
+    toast.success("Your rate submited successfully!");
 
     await axios.post("http://localhost:4000/blog/submit-rate", {
       blogId: data._id,
@@ -34,18 +40,23 @@ const Blog: React.FC<singleBlog> = ({ data , comments }) => {
         'auth': `ut ${token}`
       }
     })
-    window.location.assign(`http://localhost:3000/allBlogs/${data._id}`)
+    // window.location.assign(`http://localhost:3000/allBlogs/${data._id}`);
+    // router.push(`/allBlogs/${data._id}`);
 
   }
 
   const submit_comment = async () => {
 
     if (!token) {
-      window.location.assign(`http://localhost:3000/login_signup`)
-      return alert("You have to login or sign up before submiting a comment!")
+      toast.error("You have to login or sign up before submiting a comment!")
+      return router.push('/login_signup')
+      // window.location.assign(`http://localhost:3000/login_signup`)
+      // return alert("You have to login or sign up before submiting a comment!")
     } 
 
     setComment("");
+    toast.success("Your comment submited successfully!");
+
 
     await axios.post("http://localhost:4000/comment/submit",
       {
@@ -59,7 +70,8 @@ const Blog: React.FC<singleBlog> = ({ data , comments }) => {
       }
       });
     
-    window.location.assign(`http://localhost:3000/allBlogs/${data._id}`)
+    // window.location.assign(`http://localhost:3000/allBlogs/${data._id}`)
+    router.push(`/allBlogs/${data._id}`);
      
   }
 

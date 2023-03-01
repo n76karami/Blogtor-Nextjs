@@ -10,6 +10,7 @@ import Loading from '../loading/Loading';
 import { useSelector , useDispatch } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { setCurrent_user } from '@/redux/userSlice';
+import { useRouter } from 'next/router';
 
 const cookies = new Cookies();
 
@@ -18,17 +19,20 @@ const D_Navbar = () => {
   const [img, setImg] = useState('');
   const [current_user, setcurrent_user] = useState<any>('');
   const [nav, SetNav] = useState(false);
-  const [isloading, setisLoading] = useState(true);
+  // const [isloading, setisLoading] = useState(true);
 
-  const thisUser = useSelector((state: RootState) => state.current_user.current_user)
+  const thisUser = useSelector((state: RootState) => state.current_user.current_user);
+  const flag = useSelector((state: RootState) => state.current_user.flag);
+  
 
   const token: string = cookies.get('token')
   const dispatch = useDispatch();
 
+  const router = useRouter();
 
   const myaxios = async () => {
     
-    if (thisUser) {
+    if (thisUser && !flag) {
       setcurrent_user(thisUser)
       setImg(`http://localhost:4000/${thisUser.avatar}`)
       return
@@ -46,7 +50,7 @@ const D_Navbar = () => {
     setcurrent_user(res.data)
     setImg(`http://localhost:4000/${res.data.avatar}`)
     dispatch(setCurrent_user(res.data))
-    setisLoading(false)
+    // setisLoading(false)
     
   }
   // console.log(current_user)
@@ -58,20 +62,19 @@ const D_Navbar = () => {
       myaxios()
         
     }
-    else {
-      setisLoading(false) 
-    }
   
   }, [])
 
   // if (isloading) return <Loading />
-  if(!thisUser && isloading) return <Loading />
+  // if(!thisUser && isloading) return <Loading />
 
 
   const Log_out = () => {
     
     cookies.remove('token')
-    window.location.assign('/')
+    // window.location.assign('/');
+    router.push('/');
+    dispatch(setCurrent_user({}));
 
   }
 
@@ -95,8 +98,8 @@ const D_Navbar = () => {
         </div>
         <div className='hidden  lg:flex  gap-2'>
           <Link href='/'>
-            <button className=' border-2 border-gray-800/40 rounded-md py-2 px-4
-            font-bold hover:bg-gray-700 hover:text-white'>
+            <button className={` border-2 border-gray-800/40 rounded-md py-2 px-4
+            font-bold hover:bg-gray-700 hover:text-white `}>
              Home page
             </button>
           </Link>
@@ -114,7 +117,7 @@ const D_Navbar = () => {
       <div className='w-full h-24 px-4 '>
         <div className='py-2 px-2'>
           <p className='px-[103px] md:px-[155px] lg:px-[233px]  break-words' >
-            {thisUser.bio}
+            {thisUser?.bio}
           </p>
         </div>
       </div>
@@ -122,17 +125,20 @@ const D_Navbar = () => {
         <div className=' w-full hidden lg:block'>
           <ul className='flex justify-center gap-3'>
             <Link href='/blogList'>
-              <li className='  hover:text-black font-medium '>
+              <li className={` hover:text-black font-medium ${router.pathname == '/blogList' ?
+                'border-b-[3px] border-blue-500' : ''}`}>
                 YourBlogs
               </li>
             </Link>
             <Link href='/createBlog'>
-              <li className=' hover:text-black font-medium'>
+              <li className={` hover:text-black font-medium ${router.pathname == '/createBlog' ?
+                'border-b-[3px] border-blue-500' : ''}`}>
                 Create blog
               </li>
             </Link>
             <Link href='/editProfile'>
-              <li className=' hover:text-black font-medium'>
+              <li className={` hover:text-black font-medium ${router.pathname == '/editProfile' ?
+                'border-b-[3px] border-blue-500' : ''}`}>
                 Edit profile
               </li>
             </Link>

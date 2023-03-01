@@ -1,7 +1,9 @@
 import { Editor } from '@tinymce/tinymce-react';
 import axios from 'axios';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react'
+import { toast } from 'react-toastify';
 import Cookies from 'universal-cookie';
 import Loading from '../loading/Loading';
 
@@ -34,9 +36,12 @@ const BlogList = () => {
   const [deleteModal, setdeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [currentBlog, setCurrentBlog] = useState(null);
-  const [isloading, setisLoading] = useState(true);
+  // const [isloading, setisLoading] = useState(true);
 
   const editorRef = useRef(null);
+
+  const router = useRouter();
+  // console.log(router)
 
   
   // console.log(token)
@@ -48,9 +53,9 @@ const BlogList = () => {
         "auth": `ut ${token}`
       }
     });
-    console.log(data)
+    // console.log(data)
     setBlogs(data)
-    setisLoading(false)
+    // setisLoading(false)
     
   }
 
@@ -58,7 +63,7 @@ const BlogList = () => {
 
     myblog_axios()
 
-  }, [])
+  }, [blogs])
 
   const naser = (blog: any) => {
     setEditModal(true);
@@ -78,7 +83,8 @@ const BlogList = () => {
       }
     })
 
-    window.location.assign('http://localhost:3000/blogList');
+    // window.location.assign('http://localhost:3000/blogList');
+    router.push('/blogList');
     setdeleteModal(false);
   }
 
@@ -99,16 +105,18 @@ const BlogList = () => {
       }
     })
 
-    window.location.assign('http://localhost:3000/blogList');
+    // window.location.assign('http://localhost:3000/blogList');
+    toast.success('You successfully edited your blog!')
+    router.push('/blogList');
     setEditModal(false)
 
-    alert("You successfully edited your blog!");
+    // alert("You successfully edited your blog!");
 
   }
 
-  if (isloading) return <Loading />
+  // if (isloading) return <Loading />
 
-  console.log(currentBlog)
+  // console.log(currentBlog)
 
   return (
     <main className='w-full px-8'>

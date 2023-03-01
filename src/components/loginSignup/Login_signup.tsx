@@ -7,6 +7,8 @@ import axios , { AxiosResponse } from 'axios';
 // import { useSelector , useDispatch } from 'react-redux/es/exports';
 import { useSelector , useDispatch } from 'react-redux';
 import { setCurrent_user } from '@/redux/userSlice';
+import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 // import { currentUser } from '@/redux/userSlice';
 
 const cookies = new Cookies();
@@ -32,6 +34,8 @@ const Login_signup = () => {
   // const { register, handleSubmit , formState: {errors} } = useForm({
   //   resolver: yupResolver(schema)
   // });
+
+  const router = useRouter();
 
 
   const dispatch = useDispatch();
@@ -66,8 +70,10 @@ const Login_signup = () => {
       // localStorage.setItem('current_user', JSON.stringify(res2.data))
       dispatch(setCurrent_user(res2.data))
       
-      window.location.assign('http://localhost:3000')
-      return alert("You've logged in successfully")
+      // window.location.assign('http://localhost:3000')
+      // return alert("You've logged in successfully")
+      toast.success("You've logged in successfully")
+      router.push('/');
     }
     
   }
@@ -98,7 +104,9 @@ const Login_signup = () => {
       dispatch(setCurrent_user(res2.data))
 
       // window.location.assign('http://localhost:3000')
-      return alert("You've signed up successfully")
+      toast.success("You've signed up successfully")
+      router.push('/');
+      // return alert("You've signed up successfully")
     }
   }
 

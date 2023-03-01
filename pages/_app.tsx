@@ -7,7 +7,9 @@ import { useSelector , useDispatch } from 'react-redux';
 import { useEffect } from 'react'
 import axios from 'axios'
 import { setCurrent_user } from '@/redux/userSlice'
-
+import NextNProgress from 'nextjs-progressbar';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function App({ Component, pageProps }: AppProps) {
   console.log("render")
@@ -21,6 +23,26 @@ export default function App({ Component, pageProps }: AppProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Provider store={store}>
+        <NextNProgress
+          color="red"
+          startPosition={0.3}
+          stopDelayMs={200}
+          height={3}
+          showOnShallow={true}
+          options={{ showSpinner: false }}
+        />
+        <ToastContainer
+          position="top-right"
+          autoClose={4000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
         <Component {...pageProps} />
       </Provider>
     </>

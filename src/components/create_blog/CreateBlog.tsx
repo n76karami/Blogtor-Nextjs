@@ -1,6 +1,8 @@
 import { Editor } from '@tinymce/tinymce-react';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 import React, { useRef, useState } from 'react'
+import { toast } from 'react-toastify';
 import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
@@ -12,6 +14,7 @@ const CreateBlog = () => {
   const [imgUrl, setImgUrl] = useState("");
 
   const token = cookies.get('token'); 
+  const router = useRouter();
 
   const createblog = async () => {
 
@@ -27,8 +30,9 @@ const CreateBlog = () => {
       }
     })
 
-    window.location.assign('http://localhost:3000/blogList');
-    alert("You successfully posted your blog!");
+    // window.location.assign('http://localhost:3000/blogList');
+    toast.success("You successfully posted your blog!");
+    router.push('/blogList');
     
   }
 

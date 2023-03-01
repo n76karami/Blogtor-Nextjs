@@ -13,6 +13,7 @@ import Loading from '../loading/Loading';
 import { useSelector , useDispatch } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { setCurrent_user } from '@/redux/userSlice';
+import { useRouter } from 'next/router';
 
 
 
@@ -24,7 +25,7 @@ const Navbar = () => {
   const [modal, SetModal] = useState<boolean>(false);
   const [current_user, setcurrent_user] = useState<any>();
 
-  const [isloading, setisLoading] = useState(true);
+  // const [isloading, setisLoading] = useState(true);
 
   const thisUser = useSelector((state: RootState) => state.current_user.current_user)
 
@@ -32,6 +33,9 @@ const Navbar = () => {
 
   const token: string = cookies.get('token')
   const dispatch = useDispatch();
+
+  const router = useRouter();
+  console.log(router)
   
   const myaxios = async () => {
     
@@ -49,7 +53,7 @@ const Navbar = () => {
 
     setcurrent_user(res.data)
     dispatch(setCurrent_user(res.data))
-    setisLoading(false)
+    // setisLoading(false)
     
   }
   // console.log(current_user)
@@ -61,20 +65,19 @@ const Navbar = () => {
       myaxios()
         
     }
-    else {
-      setisLoading(false) 
-    }
   
   }, [])
 
   // if (!thisUser)  return <Loading />
-  if (!thisUser && isloading) return <Loading />
+  // if (!thisUser && isloading) return <Loading />
 
   const Log_out = () => {
     
     cookies.remove('token')
-    window.location.assign('/')
-
+    // window.location.assign('/');
+    router.push('/');
+    SetModal(false);
+    dispatch(setCurrent_user({}));
   }
 
   return (
@@ -89,13 +92,13 @@ const Navbar = () => {
         <div className="text-center w-96">
           <ul className="hidden md:flex">
             <Link href='/'>
-            <li>Home</li>
+            <li className={`${router.pathname == '/' ? 'text-[#98eed8]': ''}`}>Home</li>
             </Link>
             <Link href='/allBlogs'>
-            <li>Blogs</li>
+            <li className={`${router.pathname.includes('/allBlogs') ? 'text-[#98eed8]': ''}`}>Blogs</li>
             </Link>
             <Link href='/allWriters'>
-            <li>Writers</li>
+            <li className={`${router.pathname.includes('/allWriters') ? 'text-[#98eed8]': ''}`}>Writers</li>
             </Link>
           </ul>
         </div>

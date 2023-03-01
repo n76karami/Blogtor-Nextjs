@@ -4,7 +4,9 @@ import axios from 'axios';
 import Loading from '../loading/Loading';
 import { useSelector , useDispatch } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { setCurrent_user } from '@/redux/userSlice';
+import { setCurrent_user, setFlag } from '@/redux/userSlice';
+import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 // import { setCurrent_user } from '@/redux/userSlice';
 
 const cookies = new Cookies();
@@ -24,6 +26,8 @@ const EditProfile = () => {
   const dispatch = useDispatch();
 
   const token = cookies.get('token');
+
+  const router = useRouter();
 
   useEffect(() => {
     if (file) {
@@ -72,14 +76,11 @@ const EditProfile = () => {
       myaxios()
         
     }
-    else {
-      setisLoading(false) 
-    }
   
     
   }, [])
 
-  if(!thisUser && isloading) return <Loading />
+  // if(!thisUser && isloading) return <Loading />
 
   const submit_avatar = async () => {
     try {
@@ -120,7 +121,10 @@ const EditProfile = () => {
       }
     })
     submit_avatar()
-    window.location.assign('http://localhost:3000/blogList')
+    // window.location.assign('http://localhost:3000/blogList')
+    dispatch(setFlag(true));
+    toast.success("You've edit profile successfully")
+    router.push('/blogList');
     return data;
   }
 
